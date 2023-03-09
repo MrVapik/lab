@@ -7,7 +7,7 @@ int main()
 	printf("a b c: ");
 	scanf("%lf%lf%lf", &a, &b, &c);
 	if (a <= 0 || b <= 0 || c <= 0 || a + b <= c || b + c <= a || c + a <= b)
-	printf("Треугольника не существует");
+	printf("The triangle does not exist");
 	else
 	{
 		perimetr(a, b, c);
@@ -16,10 +16,10 @@ int main()
 }
 void perimetr(double x, double y, double z)
 {
-	printf("Периметр %g\n", x + y + z);
+	printf("perimetr %g\n", x + y + z);
 }
 void ploshchadj(double x, double y, double z)
 {
 	double p=(x+y+z)/2;
-	printf("Площадь %g\n", sqrt(p * (p - x) * (p - y) * (p - z)));
+	printf("ploshchad %g\n", sqrt(p * (p - x) * (p - y) * (p - z)));
 }
