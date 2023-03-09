@@ -1,37 +1,25 @@
 #include <stdio.h>
-#include <stdlib.h>
+#include <math.h>
 
-/* run this program using the console pauser or add your own getch, system("pause") or input loop */
-
-int main(int argc, char *argv[])
+int main()
 {
-	int i,j; 
-	int n,s,k,m=1; 
-	printf("N: ");
-	scanf("%d",&n);
-	int a[n][n];
-	for(i=0; i< n; i++)
+	double a, b, c;
+	printf("a b c: ");
+	scanf("%lf%lf%lf", &a, &b, &c);
+	if (a <= 0 || b <= 0 || c <= 0 || a + b <= c || b + c <= a || c + a <= b)
+	printf("Треугольника не существует");
+	else
 	{
-		printf("Line %d: ",i+1);
-		for(j=0; j< n; j++)scanf("%d",&a[i][j]);
+		perimetr(a, b, c);
+		ploshchadj(a, b, c);
 	}
-	k=0;
-	for(j=0; j< n; j++)k+=a[j][j];
-	s=0;
-	for(j=0; j< n; j++)s+=a[j][n-j-1];
-	if(s!=k)m=0;
-	for(j=0; j< n; j++)
-	{
-		s=0;
-		for(i=0; i< n; i++)s+=a[i][j];
-		if(s!=k)m=0;
-	}
-	for(j=0; j< n; j++)
-	{
-		s=0;
-		for(i=0; i< n; i++)s+=a[j][i];
-		if(s!=k)m=0;
-	}
-	printf("%s\n",m?"true":"false");
-	return 0;
+}
+void perimetr(double x, double y, double z)
+{
+	printf("Периметр %g\n", x + y + z);
+}
+void ploshchadj(double x, double y, double z)
+{
+	double p=(x+y+z)/2;
+	printf("Площадь %g\n", sqrt(p * (p - x) * (p - y) * (p - z)));
 }
