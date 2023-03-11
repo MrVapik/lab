@@ -1,33 +1,52 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <math.h>
+#include <stdlib.h>
 
-/* run this program using the console pauser or add your own getch, system("pause") or input loop */
-
-int main(int argc, char *argv[]) 
+int main(int argc, char *argv[])
 {
-	double massiv[3][3];
-	int i,j;
-	for (i = 0; i<3;i++)
+    int a, i, j, k;
+    double x1=0, x2=0;
+	scanf("%d", &a);
+	double x[a][a], y[a][a];
+	
+	for (i = 0; i<a; i++)
 	{
-		for(j=0; j<3;j++)
+    	for (j = 0; j<a; j++)
 		{
-			scanf("%d", &massiv[i][j]);
-		}
+    		scanf("%lf", &x[i][j]);
+    		if (i==j)
+    		{
+    			x1=x1+x[i][j];
+			}
+			if(a==i+j+1)
+			{
+    			x2=x2+x[i][j];
+			}
+    	}
 	}
-	double kok = massiv[0][0] + massiv[2][2] + massiv[1][1];
-	double fof = massiv[0][2] + massiv[2][0] + massiv[1][1];
-	printf("Sum main = %d \n", kok);
-	printf("Sum side = %d \n", fof);
-	int d,s,m[2][2];
-	for (d = 0; d<2;d++)
+
+	for (i=0; i<a; i++)
+	
 	{
-		for(s = 0; s<2; s++)
-		{
-			scanf("%d", &m[d][s]);
-		}
+	    for (j=0; j<a; j++)
+    	    printf("%lf ", x[i][j]);
+    	printf("\n");
 	}
-	printf("|%d %d|\n", m[0][0]*m[0][0] + m[0][1]*m[1][0], m[0][0]*m[0][1] + m[0][1]*m[1][1]);
-	printf("|%d %d|", m[0][0]*m[1][0] + m[1][1]*m[1][0], m[1][0]*m[0][1] + m[1][1]*m[1][1]);
-	return 0;
+	printf("%lf, %lf", x1, x2);
+	for(i = 0; i<a; i++)
+	{
+    	for(j = 0; j<a; j++)
+    	{
+   		    y[i][j]=0;
+ 		    for(k=0; k<a; k++)
+    	    y[i][j] += x[i][k] * x[k][j];
+    	}
+	}
+
+	for (i=0; i<a; i++)
+	{
+	    for (j=0; j<a; j++)
+    	    printf("%lf ", y[i][j]);
+    	printf("\n");
+	}
 }

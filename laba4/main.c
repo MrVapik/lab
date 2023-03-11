@@ -1,25 +1,22 @@
 #include <stdio.h>
 #include <math.h>
+#include <conio.h>
+#include <locale.h>
+#include "zxc.h"
 
 int main()
 {
-	double a, b, c;
+	double a, b, c, u, i;
 	printf("a b c: ");
 	scanf("%lf%lf%lf", &a, &b, &c);
 	if (a <= 0 || b <= 0 || c <= 0 || a + b <= c || b + c <= a || c + a <= b)
 	printf("The triangle does not exist");
 	else
 	{
-		perimetr(a, b, c);
-		ploshchadj(a, b, c);
+		u = perimetr(a, b, c);
+		i = ploshchadj(a, b, c);
+		printf("perimetr %g\n", u);
+		printf("ploshchad %g\n", i);
 	}
-}
-void perimetr(double x, double y, double z)
-{
-	printf("perimetr %g\n", x + y + z);
-}
-void ploshchadj(double x, double y, double z)
-{
-	double p=(x+y+z)/2;
-	printf("ploshchad %g\n", sqrt(p * (p - x) * (p - y) * (p - z)));
+	return 0;
 }
