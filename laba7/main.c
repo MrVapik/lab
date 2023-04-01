@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <locale.h>
 
 #define MAX_LEN 100 // Максимальная длина имени и фамилии
 
@@ -20,6 +21,7 @@ int compare_birth_year(const void *a, const void *b) {
 }
 
 int main() {
+	setlocale(LC_ALL, "Rus");
     humen arr1[4], arr2[4];
     int i;
 
