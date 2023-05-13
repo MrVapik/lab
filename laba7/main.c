@@ -3,52 +3,43 @@
 #include <string.h>
 #include <locale.h>
 
-#define MAX_LEN 100 // Максимальная длина имени и фамилии
-
-// Определение типа-структуры humen
 typedef struct {
-    char first_name[MAX_LEN];
-    char last_name[MAX_LEN];
+    char name[50];
+    char surname[50];
     int birth_year;
 } humen;
 
-// Функция для сравнения элементов типа humen по году рождения
-int compare_birth_year(const void *a, const void *b) {
-    const humen *h1 = (const humen*) a;
-    const humen *h2 = (const humen*) b;
-
-    return (h1->birth_year - h2->birth_year);
+int compare_surname(const void* a, const void* b) {
+    return strcmp(((humen*)a)->surname, ((humen*)b)->surname);
 }
 
 int main() {
-	setlocale(LC_ALL, "Rus");
-    humen arr1[4], arr2[4];
-    int i;
+    setlocale(LC_ALL, "Russian");
 
-    // Ввод элементов массива arr1
+    humen people[4];
+    humen sorted_people[4];
+
+    printf("Введите данные о 4-ех людях:\n");
+
+	int i;
     for (i = 0; i < 4; i++) {
-        printf("Введите имя, фамилию и год рождения %d-го человека: ", i+1);
-        scanf("%s %s %d", arr1[i].first_name, arr1[i].last_name, &arr1[i].birth_year);
+        printf("Человек %d:\n", i+1);
+        printf("Имя: ");
+        scanf("%s", people[i].name);
+        printf("Фамилия: ");
+        scanf("%s", people[i].surname);
+        printf("Год рождения: ");
+        scanf("%d", &people[i].birth_year);
     }
 
-    // Копирование элементов массива arr1 в arr2
-    memcpy(arr2, arr1, sizeof(humen) * 4);
-    // В данном коде memcpy используется для копирования элементов массива arr1 в массив arr2 перед тем, как сортировать последний. Для этого вызывается следующая строка кода:
-    // Здесь arr2 - указатель на первый элемент массива, куда нужно скопировать данные, arr1 - указатель на первый элемент массива, откуда нужно скопировать данные, sizeof(humen) * 4 -
-    // размер блока памяти в байтах, который нужно скопировать. Здесь sizeof(humen) вычисляет размер структуры humen, а умножение на 4 указывает на то, что мы копируем 4 элемента этой структуры.
+    memcpy(sorted_people, people, sizeof(humen) * 4);
 
-    // Сортировка элементов массива arr2 по году рождения
-    qsort(arr2, 4, sizeof(humen), compare_birth_year);
-    //В данном коде qsort используется для сортировки массива структур типа humen по году рождения.
-    //Она принимает указатель на начало массива, количество элементов в массиве, размер каждого элемента в байтах и указатель на функцию-компаратор, которая сравнивает два элемента массива.
-    //В данном коде функция-компаратор compare_birth_year сравнивает два указателя на элементы типа humen по полю birth_year, и возвращает отрицательное значение, 
-    //если первый элемент меньше второго, ноль, если они равны, и положительное значение, если первый элемент больше второго.
-    //Таким образом, после вызова qsort, элементы массива arr2 будут отсортированы по возрастанию года рождения.
+    qsort(sorted_people, 4, sizeof(humen), compare_surname);
 
-    // Вывод элементов массива arr2
-    printf("\nЭлементы массива arr2, отсортированные по году рождения:\n");
+    printf("\nОтсортированный массив:\n");
+
     for (i = 0; i < 4; i++) {
-        printf("%s %s %d\n", arr2[i].first_name, arr2[i].last_name, arr2[i].birth_year);
+        printf("%s %s %d\n", sorted_people[i].name, sorted_people[i].surname, sorted_people[i].birth_year);
     }
 
     return 0;
