@@ -1,162 +1,91 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <locale.h>
 
-#define MAX_LEN 100 // ???????????? ????? ?????? ??? ?????/???????
-
-// ????????? ??? ???????? ?????????? ? ????????
-typedef struct {
-    char first_name[MAX_LEN];
-    char last_name[MAX_LEN];
-    int birth_year;
+struct Person {
+    char name[50];
+    char surname[50];
+    int birthYear;
     char gender;
     float height;
-} Person;
+};
 
-// ??????? ??? ????????? ???? ????? ?? ???????? ?????
-int compare_people(const void* a, const void* b, const int num_fields, const int* fields) {
-    const Person* p1 = (const Person*)a;
-    const Person* p2 = (const Person*)b;
-    int i, cmp;
+int comparePersons(const void *a, const void *b) {
+    const struct Person *personA = (const struct Person *)a;
+    const struct Person *personB = (const struct Person *)b;
 
-    for (i = 0; i < num_fields; i++) {
-        switch (fields[i]) {
-        case 1:
-            cmp = strcmp(p1->first_name, p2->first_name);
-            if (cmp != 0) return cmp;
-            cmp = strcmp(p1->last_name, p2->last_name);
-            if (cmp != 0) return cmp;
-            break;
-        case 2:
-            cmp = p1->birth_year - p2->birth_year;
-            if (cmp != 0) return cmp;
-            break;
-        case 3:
-            cmp = p1->gender - p2->gender;
-            if (cmp != 0) return cmp;
-            break;
-        case 4:
-            cmp = p1->height - p2->height;
-            if (cmp != 0) return cmp;
-            break;
-        default:
-            break;
-        }
-    }
+    // Проверка по году рождения
+    if (personA->birthYear != personB->birthYear)
+        return personA->birthYear - personB->birthYear;
 
+    // Проверка по имени/фамилии
+    int nameComparison = strcmp(personA->name, personB->name);
+    if (nameComparison != 0)
+        return nameComparison;
+
+    // Проверка по полу
+    if (personA->gender != personB->gender)
+        return personA->gender - personB->gender;
+
+    // Проверка по росту
+    if (personA->height != personB->height)
+        return personA->height - personB->height;
+
+    // Если все поля равны, считаем записи равными
     return 0;
 }
 
-// ??????? ??? ?????? ?????????? ? ????????
-void print_person(const Person* p) {
-    printf("%s %s, %d, %c, %.2f\n", p->first_name, p->last_name, p->birth_year, p->gender, p->height);
-}
-
 int main() {
-    int num_people = 0, i;
-    char filename[MAX_LEN], order[MAX_LEN];
-    FILE* fp;
-    Person* people = NULL;
-    int num_fields = 0, fields[MAX_LEN];
+    setlocale(LC_ALL, "");  // Установка локали для поддержки Unicode
 
-    // ?????? ????? ????? ??? ??????
-    printf("??????? ??? ????? ??? ??????: ");
-    scanf("%s", filename);
-
-    // ???????? ????? ??? ??????
-    fp = fopen(filename, "r");
-    if (fp == NULL) {
-        printf("?????? ??? ???????? ?????\n");
+    FILE *file = fopen("P.txt", "r");
+    if (file == NULL) {
+        printf("Ошибка открытия файла.\n");
         return 1;
     }
 
-    // ?????? ????? ????? ? ?????
-    fscanf(fp, "%d", &num_people);
+    int numPersons;
+    fscanf(file, "%d", &numPersons);
 
-    // ????????? ?????? ??? ?????? ???????? Person
-    people = (Person*)malloc(num_people * sizeof(Person));
-    if (people == NULL) {
-        printf("?????? ????????? ??????\n");
-        return 1;
+    struct Person *persons = (struct Person *)malloc(numPersons * sizeof(struct Person));
+	
+	int i;
+    for (i = 0; i < numPersons; i++) {
+        fscanf(file, "%s %s %d %c %f",
+               persons[i].name, persons[i].surname, &persons[i].birthYear,
+               &persons[i].gender, &persons[i].height);
     }
 
-    // ?????? ?????????? ? ????? ?? ?????
-    for (i = 0; i < num_people; i++) {
-        fscanf(fp, "%s %s %d %c %f", people[i].first_name, people[i].last_name, &people[i].birth_year, &people[i].gender, &people[i].height);
+    fclose(file);
+
+    int numFields;
+    printf("\nВведите количество полей для упорядочивания (1-4): ");
+    scanf("%d", &numFields);
+
+    int fieldIndices[4] = {0};  // Индексы полей для упорядочивания
+
+    printf("\nУкажите индексы полей для упорядочивания (0-3):\n");
+    for (i = 0; i < numFields; i++) {
+        printf("Поле %d: ", i + 1);
+        scanf("%d", &fieldIndices[i]);
     }
 
-    // ???????? ?????
-fclose(fp);
+    qsort(persons, numPersons, sizeof(struct Person), comparePersons);
 
-// ?????????, ??? ?? ?????? ????
-if (fp == NULL) {
-    printf("??????: ?? ??????? ??????? ????\n");
-    return 1;
-}
-
-// ?????????? ?????? ? ????
-int n;
-printf("Enter the number of records: ");
-scanf("%d", &n);
-for (i = 0; i < n; i++) {
-    fprintf(fp, "%s %s %d %c %.2f\n", people[i].first_name, people[i].last_name, people[i].birth_year, people[i].gender, people[i].height);
-}
-
-fclose(fp);
-
-// ????????? ?????? ???????? ? ???????????? ? ?????????? ??????
-sort(people, n, fields, num_fields);
-
-// ??????? ????????? ??????????
-printf("\n????????? ??????????:\n");
-for (i = 0; i < n; i++) {
-    printf("%s %s %d %c %.2f\n", people[i].first_name, people[i].last_name, people[i].birth_year, people[i].gender, people[i].height);
-}
-
-return 0;
-}
-
-// ??????? ??????????
-void sort(person people[], int n, char fields[], int num_fields) {
-int i, j, k;
-person temp;
-
-// ?????????? ?????????
-for (i = 0; i < n-1; i++) {
-    for (j = 0; j < n-i-1; j++) {
-        int cmp_result = 0;
-        for (k = 0; k < num_fields; k++) {
-            switch(fields[k]) {
-                case 'b': // ??? ????????
-                    cmp_result = people[j].birth_year - people[j+1].birth_year;
-                    break;
-                case 'n': // ??? ? ???????
-                    cmp_result = strcmp(people[j].last_name, people[j+1].last_name);
-                    if (cmp_result == 0) {
-                        cmp_result = strcmp(people[j].first_name, people[j+1].first_name);
-                    }
-                    break;
-                case 'g': // ???
-                    cmp_result = people[j].gender - people[j+1].gender;
-                    break;
-                case 'h': // ????
-                    if (people[j].height < people[j+1].height) {
-                        cmp_result = -1;
-                    } else if (people[j].height > people[j+1].height) {
-                        cmp_result = 1;
-                    }
-                    break;
-            }
-
-            // ???? ??????? ???? ?? ?????, ?? ???????????? ????????
-            if (cmp_result != 0) {
-                if (cmp_result > 0) {
-                    temp = people[j];
-                    people[j] = people[j+1];
-                    people[j+1] = temp;
-                }
-                break;
-            }
-        }
+    printf("\nУпорядоченные записи:\n");
+    for (i = 0; i < numPersons; i++) {
+        printf("Запись %d:\n", i + 1);
+        printf("Имя: %s\n", persons[i].name);
+        printf("Фамилия: %s\n", persons[i].surname);
+        printf("Год рождения: %d\n", persons[i].birthYear);
+        printf("Пол: %c\n", persons[i].gender);
+        printf("Рост: %.2f м\n", persons[i].height);
+        printf("\n");
     }
+
+    free(persons);
+    return 0;
 }
+
+
