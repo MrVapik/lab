@@ -2,12 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <locale.h>
 
 #define MAX_INPUT_LENGTH 100
 
 double calculate_expression(char *expression);
 
 int main() {
+	setlocale(LC_ALL, "Russian");
     char input[MAX_INPUT_LENGTH];
     printf("ved veraz:\n");
     fgets(input, MAX_INPUT_LENGTH, stdin);
@@ -30,11 +32,16 @@ double calculate_expression(char *expression) {
                 case '-':
                     result -= number;
                     break;
+                 case '*':
+                    result *= number;
+                    break;               
             }
         } else if (token[0] == '+') {
             operator = '+';
         } else if (token[0] == '-') {
             operator = '-';
+        } else if (token[0] == '*') {
+            operator = '*';
         }
         expression = NULL;
     }
